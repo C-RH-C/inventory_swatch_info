@@ -33,8 +33,8 @@ id,server,reporter,arch,core_per_sockets,infrastructure.type,number_of_cpus,numb
 # How to implement this script
 - Clone the project
 ~~~
-# git clone https://github.com/waldirio/c.rh.c-tools.git
-# cd c.rh.c-tools/inventory_swatch_info/
+# git clone https://github.com/C-RH-C/inventory_swatch_info.git
+# cd inventory_swatch_info/
 ~~~
 - Create a new virtual environment using python 2.7
 ~~~
