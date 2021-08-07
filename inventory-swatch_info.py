@@ -4,7 +4,7 @@
 # Author: Waldirio M Pinheiro <waldirio@gmail.com>
 # Contributor: Rich Jerrido <rjerrido@outsidaz.org>
 # Purpose:
-#   This script will collect the information from cloud.redhat.com/Inventory and
+#   This script will collect the information from console.redhat.com/Inventory and
 #   will put in a nice/simple view the whole information, being easy to create a
 #   pivot table and moving on.
 #
@@ -64,7 +64,7 @@ stage1_lst = []
 def process_info(login, password, server):
     """
     Function responsible for collect and process the main info regarding
-    to the Content Hosts on cloud.redhat.com
+    to the Content Hosts on console.redhat.com
     """
 
     if options.debug:
@@ -81,7 +81,7 @@ def process_info(login, password, server):
         VERBOSE = True
 
     if DEBUG and not FILEINPUTMODE:
-        outputfile = open(("cloud.redhat.com_output-%s.json" % login), "w")
+        outputfile = open(("console.redhat.com_output-%s.json" % login), "w")
 
     systemdata = []
     if FILEINPUTMODE:
@@ -122,7 +122,7 @@ def process_info(login, password, server):
             # while (page < 2):
                 page += 1
                 q = [('page', page), ('per_page', per_page)]
-                url = "https://cloud.redhat.com/api/inventory/v1/hosts?" + urllib.urlencode(q)
+                url = "https://console.redhat.com/api/inventory/v1/hosts?" + urllib.urlencode(q)
                 if VERBOSE:
                     print "=" * 80
                     print "[%sVERBOSE%s] Connecting to -> %s " % (error_colors.OKGREEN, error_colors.ENDC, url)
@@ -130,7 +130,7 @@ def process_info(login, password, server):
                 jsonresult = json.loads(result)
                 systemdata += jsonresult['results']
             if DEBUG:
-                with open('cloud.redhat.com_output-%s.json' % login, 'w') as json_file:
+                with open('console.redhat.com_output-%s.json' % login, 'w') as json_file:
                     json.dump(systemdata, json_file)
 
         except Exception, e:
@@ -152,7 +152,7 @@ def process_info(login, password, server):
 def system_profile(id, display_name, reporter, satellite_id):
     """
     Function responsible for collect the system_profile of each Content Host
-    hosted on cloud.redhat.com
+    hosted on console.redhat.com
     """
     global stage_lst
 
@@ -247,6 +247,7 @@ def hypervisor_guests():
     for hyper in hypervisor_guests_list:
 
         url = 'https://' + server + '/api/rhsm-subscriptions/v1/hosts/' + hyper[1] + '/guests?limit=100&offset=0'
+        print url
 
         result = requests.get(url, auth=(login, password)).content
         jsonresult = json.loads(result)
@@ -346,7 +347,7 @@ def csv_export():
 def process_info_swatch(login, password, server):
     """
     Function responsible for collect and process the main info regarding
-    to the Content Hosts on cloud.redhat.com
+    to the Content Hosts on console.redhat.com
     """
 
     global systemdata
@@ -504,7 +505,7 @@ def csv_export_swatch():
 
 if __name__ == "__main__":
 
-    default_server = "cloud.redhat.com"
+    default_server = "console.redhat.com"
     default_login = "default"
     default_password = ""
 
@@ -528,7 +529,7 @@ if __name__ == "__main__":
     if not (options.login and options.server):
         print "Must specify login, server, and orgid options.  See usage:"
         parser.print_help()
-        print "\nExample usage: ./insights-inventory-exporter.py -l admin -s cloud.redhat.com"
+        print "\nExample usage: ./insights-inventory-exporter.py -l admin -s console.redhat.com"
         sys.exit(1)
     else:
         login = options.login
@@ -541,7 +542,7 @@ if __name__ == "__main__":
     elif not (options.login and options.server):
         print "Must specify login, server, and orgid options.  See usage:"
         parser.print_help()
-        print "\nExample usage: ./insights-inventory-exporter.py -l admin -s cloud.redhat.com"
+        print "\nExample usage: ./insights-inventory-exporter.py -l admin -s console.redhat.com"
         sys.exit(1)
     else:
         FILEINPUTMODE = False
@@ -553,7 +554,7 @@ if __name__ == "__main__":
     if not (FILEINPUTMODE or password):
         password = getpass.getpass("%s's password:" % login)
 
-    # To process all the CH information from cloud.redhat.com
+    # To process all the CH information from console.redhat.com
     process_info(login, password, server)
 
     # Collecting the list of guests running on top of the hypervisors list
